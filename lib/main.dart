@@ -14,6 +14,7 @@ void main() async {
     ),
   );
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: HomeScreen(),
     theme: ThemeData.light(),
   ));
@@ -58,14 +59,15 @@ class MyCustomForm extends StatefulWidget {
 class _MyCustomFormState extends State<MyCustomForm> {
   int? status;
 
-  void sendData(double imc, double peso, double altura, String nome) {
+  void sendData(double imc, double peso, double altura, String nome, String result) {
     FirebaseFirestore.instance.collection("Pesagens").add(
       {
         "altura": altura,
         "peso": peso,
         "imc": imc,
         "nome": nome,
-        "data": Timestamp.now()
+        "data": Timestamp.now(),
+        "result": _result,
       }
     );
   }
@@ -77,7 +79,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
     String nome = controllerNome.text.toString();
 
     setState(() {
-      _result = "IMC = ${imc.toStringAsPrecision(2)}\n";
+      _result = "";
       if(imc < 17)
         _result += "Muito abaixo do peso";
       else if (imc < 18.49)
@@ -94,7 +96,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
         _result += "Obesidade III (mórbida)";
     });
 
-    sendData(imc, peso, altura, nome);
+    sendData(imc, peso, altura, nome, _result);
+
+    controllerNome.clear();
+    controllerPeso.clear();
+    controllerAltura.clear();
+
   }
 
   @override
@@ -156,47 +163,49 @@ class _MyCustomFormState extends State<MyCustomForm> {
             ),
           ),
         ),
-        TextButton(
-          style: TextButton.styleFrom(
-            alignment: Alignment.center,
-              backgroundColor: Colors.black,
-              elevation: 0,
-              shadowColor: Colors.green),
-          child: Text(
-            'Calcular',
-            style: TextStyle(
-              color: Colors.white,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 81, vertical: 15),
+                backgroundColor: Colors.blue,
+                elevation: 0,
+                shadowColor: Colors.green),
+            child: Text(
+              'Calcular',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
+            onPressed: () {
+              calculateImc();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
           ),
-          onPressed: () {
-            calculateImc();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
-        SizedBox(
-          height: 8.0,
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Colors.black,
-              elevation: 0,
-              shadowColor: Colors.green),
-          child: Text(
-            'Voltar',
-            style: TextStyle(
-              color: Colors.white,
+
+          TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 81, vertical: 15),
+                elevation: 0,
+                shadowColor: Colors.green),
+            child: Text(
+              'Voltar',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
           ),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 36.0),
-          child: Text(
-            _result,
-            textAlign: TextAlign.center,
-          ),
+          ]
         ),
       ],
     );
