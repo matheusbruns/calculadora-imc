@@ -1,4 +1,4 @@
-nomes: Matheus Rosa Bruns, Eduardo Nass e Luis Felipe
+nomes: Matheus Rosa Bruns, Carlos Nass e Luis Felipe
 
 ## Getting Started
 
