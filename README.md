@@ -1,6 +1,4 @@
-# calc_imc_n3
-
-Equipe: Vinicius Vicenzo Padilha, Gabriel Furquim e Gustavo Lipinski
+nomes: Matheus Rosa Bruns, Eduardo Nass e Luis Felipe
 
 ## Getting Started
 
